@@ -20,8 +20,8 @@
     ".github/workflows/ci-prod-rust.yml"
   ],
   "java-sdk": [
-    "iggy/foreign/java/.*\\java",
-    "iggy/foreign/java/.*\\.sh",
+    "foreign/java/.*\\.java",
+    "foreign/java/.*\\.sh",
     ".github/workflows/ci-check-java-sdk.yml"
   ]
 }
