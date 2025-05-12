@@ -22,6 +22,6 @@
   "java-sdk": [
     "iggy/foreign/java/.*\\java",
     "iggy/foreign/java/.*\\.sh",
-    ".github/workflows/ci-java-sdk.yml"
+    ".github/workflows/ci-check-java-sdk.yml"
   ]
 }

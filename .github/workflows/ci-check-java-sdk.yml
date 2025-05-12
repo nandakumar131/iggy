@@ -17,7 +17,7 @@
 
 # -------------------------------------------------------------
 #
-# CI Check Rust Workflow
+# CI Check Java Workflow
 #
 # This workflow runs checks for Java code.
 # Checks include:
