@@ -18,5 +18,10 @@
     "Cargo.lock",
     "Dockerfile.*",
     ".github/workflows/ci-prod-rust.yml"
+  ],
+  "java-sdk": [
+    "iggy/foreign/java/.*\\java",
+    "iggy/foreign/java/.*\\.sh",
+    ".github/workflows/ci-java-sdk.yml"
   ]
 }
