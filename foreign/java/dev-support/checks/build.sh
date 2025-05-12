@@ -19,7 +19,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd "$DIR/../.." || exit 1
 
-tasks="${1:-build}"
+task="${1:-build}"
 shift 1
-./gradlew "$tasks" "$@"
+./gradlew "$task" "$@"
 exit $?
