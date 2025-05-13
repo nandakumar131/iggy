@@ -46,6 +46,7 @@ on:
   pull_request:
     branches:
       - master
+      - java-sdk-ci-base
     types: [ opened, synchronize, reopened ]
 
 jobs:
