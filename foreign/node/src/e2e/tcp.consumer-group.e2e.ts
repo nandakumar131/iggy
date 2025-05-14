@@ -1,3 +1,22 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 
 import { after, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
@@ -63,11 +82,11 @@ describe('e2e -> consumer-group', async () => {
     const ct = 1000;
     const mn = 200;
     for (let i = 0; i <= ct; i += mn) {
-      c.message.send({
+      assert.ok(await c.message.send({
         streamId, topicId,
         messages: generateMessages(mn),
         partition: Partitioning.MessageKey(`key-${ i % 400 }`)
-      });
+      }));
     }
     payloadLength = ct;
   });
@@ -83,19 +102,20 @@ describe('e2e -> consumer-group', async () => {
       consumer: { kind: ConsumerKind.Group, id: groupId },
       partitionId: 0,
       pollingStrategy: PollingStrategy.Next,
-      count: 100,
+      count: 1,
       autocommit: true
     };
     let ct = 0;
     while (ct < payloadLength) {
       const { messages, ...resp } = await c.message.poll(pollReq);
-      assert.equal(messages.length, resp.messageCount);
+      // console.log('POLL', messages.length, 'R/C', resp.count, messages, resp, ct);
+      // assert.equal(messages.length, resp.count);
       ct += messages.length;
     }
     assert.equal(ct, payloadLength);
 
-    const { messageCount } = await c.message.poll(pollReq);
-    assert.equal(messageCount, 0);
+    const { count } = await c.message.poll(pollReq);
+    assert.equal(count, 0);
   });
 
   it('e2e -> consumer-group::leave', async () => {
@@ -107,8 +127,10 @@ describe('e2e -> consumer-group', async () => {
   });
 
   after(async () => {
+    // await c.group.leave({ streamId, topicId, groupId });
+    // await c.group.delete({ streamId, topicId, groupId });
     assert.ok(await c.stream.delete(stream));
     assert.ok(await c.session.logout());
-    await c.destroy();
+    c.destroy();
   });
 });

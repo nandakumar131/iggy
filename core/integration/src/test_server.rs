@@ -32,13 +32,8 @@ use derive_more::Display;
 use futures::executor::block_on;
 use uuid::Uuid;
 
-use iggy::client::{Client, StreamClient, UserClient};
-use iggy::clients::client::IggyClient;
-use iggy::identifier::Identifier;
-use iggy::models::identity_info::IdentityInfo;
-use iggy::models::permissions::{GlobalPermissions, Permissions};
-use iggy::models::user_status::UserStatus::Active;
-use iggy::users::defaults::*;
+use iggy::prelude::UserStatus::Active;
+use iggy::prelude::*;
 use server::configs::config_provider::{ConfigProvider, FileConfigProvider};
 
 pub const SYSTEM_PATH_ENV_VAR: &str = "IGGY_SYSTEM_PATH";
@@ -218,8 +213,8 @@ impl TestServer {
         if let Some(mut child_handle) = self.child_handle.take() {
             #[cfg(unix)]
             unsafe {
-                use libc::kill;
                 use libc::SIGTERM;
+                use libc::kill;
                 kill(child_handle.id() as libc::pid_t, SIGTERM);
             }
 
