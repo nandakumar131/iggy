@@ -20,9 +20,13 @@
 plugins {
     id("java-library")
     id("maven-publish")
-    id("signing")
     id("org.jreleaser") version ("1.14.0")
     id("checkstyle")
+}
+
+// Conditionally apply the signing plugin
+if (project.hasProperty("signing.keyId")) {
+    apply(plugin = "signing")
 }
 
 group = "org.apache.iggy"
@@ -35,11 +39,6 @@ repositories {
 java {
     withJavadocJar()
     withSourcesJar()
-}
-
-signing {
-    useGpgCmd()
-    sign(publishing.publications)
 }
 
 checkstyle {
@@ -118,5 +117,22 @@ publishing {
                 password = System.getenv("NEXUS_PASSWORD")
             }
         }
+    }
+
+    // Conditionally configure the signing extension
+    if (project.hasProperty("signing.keyId")) {
+        configure<SigningExtension> {
+            useGpgCmd()
+            // We have to provide key ID and password so Gradle can pass them to the gpg command.
+            val keyId = project.property("signing.keyId") as String
+            val password = project.property("signing.password") as String
+            // The signing extension uses these properties implicitly when useGpgCmd() is active.
+            sign(publishing.publications)
+        }
+    }
+
+    signing {
+        useGpgCmd()
+        sign(publishing.publications)
     }
 }
